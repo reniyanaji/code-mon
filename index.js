@@ -1,45 +1,55 @@
 
 const ul = document.querySelector('ul');
-var itemArray = [];
-document.getElementById("button-addon2").addEventListener("click",function li_Maker(){
+const form = document.querySelector('form');
+const input = document.querySelector('input');
 
-/* adding a list item */
+let itemsArray = localStorage.getItem('items') ?
+JSON.parse(localStorage.getItem('items')) : []
+
+localStorage.setItem('items', JSON.stringify(itemsArray))
+const data = JSON.parse(localStorage.getItem('items'))
+
+
+function li_Maker(text) {
+
+ /*adding a list item*/
 const li = document.createElement('li');
 li.id = 1;
-const form = document.querySelector('input');
-para_li_Maker = form.value;
-li.innerHTML= para_li_Maker;
+li.innerHTML= text;
 ul.appendChild(li);
 
 
-  itemArray.push(para_li_Maker);
-  localStorage.setItem("mylist", JSON.stringify(itemArray));
-  const data = JSON.parse(localStorage.getItem("mylist"));
-
-
 /* adding clear button to each list*/
-  const button = document.createElement('button');
+const button = document.createElement('button');
 button.innerHTML= "clear";
 li.appendChild(button);
 
-/* reseting the form after each submit */
-    document.getElementById("form_id").reset();
+
+}
+
+
+document.getElementById("button-addon2").addEventListener("click",function(event){
+
+   event.preventDefault();
+
+  itemsArray.push(input.value);
+  localStorage.setItem('items', JSON.stringify(itemsArray));
+
+  li_Maker(input.value);
+
+  /* reseting the form after each submit*/
+  document.getElementById("form_id").reset();
+
 
 
 });
 
+data.forEach(i=> {
+  li_Maker(i)
+})
 
-/* clear all list */
-document.getElementById("btn_clear").addEventListener("click",function clear_lists(){
-
-  while (ul.hasChildNodes()) {
-    ul.removeChild(ul.firstChild);
-  }
-
-});
-
-/* clear each item */
-document.querySelector("ul").addEventListener("click", function (event){
+/* clear each item*/
+ul.addEventListener("click", function (event){
 
   if (ul.hasChildNodes()) {
     console.log(event.target.parentNode.id);
@@ -50,3 +60,14 @@ document.querySelector("ul").addEventListener("click", function (event){
 
  }
 );
+
+
+
+/* clear all list */
+document.getElementById("btn_clear").addEventListener("click",function clear_lists(){
+localStorage.clear();
+  while (ul.hasChildNodes()) {
+    ul.removeChild(ul.firstChild);
+  }
+
+});
